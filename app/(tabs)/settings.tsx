@@ -3,10 +3,10 @@ import {
   View,
 } from "react-native";
 
-export default function Tab() {
+export default function Settings() {
   return (
     <View>
-      <Text>Tab [Home|Settings]</Text>
+      <Text>Settings</Text>
     </View>
   );
 }
