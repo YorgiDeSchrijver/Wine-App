@@ -23,15 +23,15 @@ export default function Categories({ onchange }: CategoriesProps) {
       renderItem={({ item }) => (
         <TouchableOpacity
           onPress={() => handlePress(item.id)}
-          className="mr-5 items-center"
+          className="mr-10 items-center"
         >
           <Text
-            className={`text-[20px]  ${activeCategoryId === item.id ? "text-primary": "text-secondary"}`}
+            className={`text-2xl font-varela tracking-wide  font-extrabold  ${activeCategoryId === item.id ? "text-primary": "text-secondary"}`}
           >
             {item.name}
           </Text>
           {activeCategoryId === item.id && (
-            <View className="mt-1 h-3 w-3 rounded-md bg-primary" />
+            <View className="mt-2 h-3 w-3 rounded-md bg-primary" />
           )}
         </TouchableOpacity>
       )}

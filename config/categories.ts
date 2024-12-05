@@ -5,23 +5,23 @@ const categories = [
     },
     {
         id: 2,
-        name: "whites"
+        name: "Whites"
     },
     {
         id: 3,
-        name: "sparkling"
+        name: "Sparkling"
     },
     {
         id: 4,
-        name: "rose"
+        name: "Rose"
     },
     {
         id: 5,
-        name: "dessert"
+        name: "Dessert"
     },
     {
         id: 6,
-        name: "port"
+        name: "Port"
     },
 ]
 
