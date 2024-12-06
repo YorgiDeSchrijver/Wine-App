@@ -6,7 +6,11 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="(tabs)"
-        options={{ headerShown: false, statusBarBackgroundColor: "#0C0F14" }}
+        options={{
+          headerShown: false,
+          statusBarBackgroundColor: "#0C0F14",
+          navigationBarColor: "#0C0F14",
+        }}
       />
     </Stack>
   );

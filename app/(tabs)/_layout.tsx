@@ -1,15 +1,22 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#0C0F14",
+        tabBarActiveTintColor: "#D27842",
+        tabBarInactiveTintColor: "#4E5053",
         tabBarStyle: {
           backgroundColor: "#0C0F14",
-          height: 60,
+          height: 56,
         },
+        tabBarIconStyle: {
+          height: 56,
+        },
+        tabBarHideOnKeyboard: true,
+        headerShown: false,
       }}
     >
       <Tabs.Screen
@@ -17,17 +24,26 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+            <Ionicons size={24} name="home" color={color} />
           ),
-          headerShown: false,
+          tabBarShowLabel: true,
+        }}
+      />
+      <Tabs.Screen
+        name="favourites"
+        options={{
+          title: "Favourites",
+          tabBarIcon: ({ color }) => (
+            <Ionicons size={24} name="heart" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: "Profile",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cog" color={color} />
+            <Ionicons size={24} name="person" color={color} />
           ),
         }}
       />

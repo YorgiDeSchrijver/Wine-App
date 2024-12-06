@@ -1,6 +1,6 @@
 import { TextInput, View } from "react-native";
 import { BlurView } from "expo-blur";
-import { Ionicons } from "@expo/vector-icons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SearchField() {
   return (
@@ -10,7 +10,7 @@ export default function SearchField() {
           className="w-full p-4 pl-16 text-lg text-white placeholder:text-secondary"
           placeholder="Search Wines..."
         />
-        <Ionicons
+        <FontAwesome
           className="absolute left-5 stroke-white"
           name="search"
           size={26}

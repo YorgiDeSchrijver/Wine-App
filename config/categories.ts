@@ -1,5 +1,9 @@
 const categories = [
     {
+        id: 0,
+        name: "All"
+    },
+    {
         id: 1,
         name: "Red"
     },
