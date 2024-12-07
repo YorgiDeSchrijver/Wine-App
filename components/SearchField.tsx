@@ -4,7 +4,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SearchField() {
   return (
-    <View className="my-5 mb-8 overflow-hidden rounded-3xl bg-[#141921]">
+    <View className=" mb-5 overflow-hidden rounded-3xl bg-[#141921]">
       <BlurView intensity={0} className="items-center justify-center">
         <TextInput
           className="w-full p-4 pl-16 text-lg text-white placeholder:text-secondary"
