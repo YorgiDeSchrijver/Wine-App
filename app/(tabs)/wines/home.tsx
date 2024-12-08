@@ -1,5 +1,5 @@
 import { SafeAreaView, Text, View } from "react-native";
-import Categories from "../../components/categories";
+import Categories from "../../../components/categories";
 import React, { useCallback, useEffect, useState } from "react";
 import SearchField from "@/components/SearchField";
 import useWines from "@/api";
