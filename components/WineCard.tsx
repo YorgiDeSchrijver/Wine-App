@@ -15,7 +15,10 @@ import {
 export default function WineCard(wine: Wine) {
   const { width } = Dimensions.get("window");
   return (
-    <Link href="/(tabs)/index/" asChild>
+    <Link href={{
+        pathname: "/(tabs)/wines/[id]",
+        params: { wine: JSON.stringify(wine), id: wine.id},
+    }} asChild>
       <Pressable
         key={wine.id}
         className="mb-4 flex-1 overflow-hidden rounded-3xl"
