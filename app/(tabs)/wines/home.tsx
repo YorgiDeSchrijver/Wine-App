@@ -2,7 +2,7 @@ import { SafeAreaView, Text, View } from "react-native";
 import Categories from "../../../components/categories";
 import React, { useCallback, useEffect, useState } from "react";
 import SearchField from "@/components/SearchField";
-import useWines from "@/api";
+import useWines from "@/api/wines";
 import WineCard from "@/components/WineCard";
 import { Wine } from "@/types/wine";
 import { FlashList } from "@shopify/flash-list";
