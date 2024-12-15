@@ -14,43 +14,34 @@ const wineEndpoints = [
   { url: "https://sampleapis.assimilate.be/wines/port", type: 7 },
 ];
 
-export default function useWines() {
-    const [data, setData] = useState<Wine[]>([]);
-    const [isPending, setIsPending] = useState(true);
-    const [isError, setIsError] = useState(false);
+export async function fetchWines(): Promise<Wine[]> {
+  let globalIndex = 0;
+  try {
+    const responses = await Promise.all(
+      wineEndpoints.map(async (endpoint) => {
+        const res = await fetch(endpoint.url);
 
-    useEffect(() => {
-      const fetchWines = async () => {
-        setIsPending(true);
-        setIsError(false);
-        let globalIndex = 0;
-        try {
-          const responses = await Promise.all(
-            wineEndpoints.map((endpoint) =>
-              fetch(endpoint.url)
-                .then((res) => res.json())
-                .then((data) =>
-                  data.map((wine: Omit<Wine, "type" | "id" >) => ({
-                    ...wine,
-                    type: endpoint.type,
-                    id: globalIndex++,
-                  })),
-                ),
-            ),
+        // Check if the response is valid JSON
+        const contentType = res.headers.get("Content-Type");
+        if (!res.ok || !contentType?.includes("application/json")) {
+          throw new Error(
+            `Invalid response from ${endpoint.url}: ${await res.text()}`,
           );
-
-          const combinedWines = responses.flat(); // Combine all arrays
-          setData(combinedWines);
-        } catch (error) {
-          console.error("Error fetching wine data:", error);
-          setIsError(true);
-        } finally {
-          setIsPending(false);
         }
-      };
 
-      fetchWines();
-    }, []);
+        const data = await res.json();
+        return data.map((wine: Omit<Wine, "type" | "id">) => ({
+          ...wine,
+          type: endpoint.type,
+          id: globalIndex++,
+        }));
+      }),
+    );
 
-    return { data, isPending, isError };
+    return responses.flat();
+  } catch (error) {
+    console.error("Error fetching wine data:", error);
+    throw error;
+
+  }
 }

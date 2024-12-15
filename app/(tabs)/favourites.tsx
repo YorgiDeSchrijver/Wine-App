@@ -60,11 +60,13 @@ export default function Favourites() {
           numColumns={2}
           horizontal={false}
           className="h-full w-full flex-1"
+          contentContainerStyle={{ paddingBottom: 200 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#D27842"
+              progressBackgroundColor="#0C0F14"
+              colors={["#D27842"]}
             />
           }
         />

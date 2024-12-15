@@ -1,15 +1,22 @@
-import { SafeAreaView, Text, View } from "react-native";
+import { ActivityIndicator, RefreshControl, SafeAreaView, Text, View } from "react-native";
 import Categories from "../../../components/categories";
 import React, { useCallback, useEffect, useState } from "react";
 import SearchField from "@/components/SearchField";
-import useWines from "@/api/wines";
 import WineCard from "@/components/WineCard";
 import { Wine } from "@/types/wine";
 import { FlashList } from "@shopify/flash-list";
+import useWines from "@/hooks/useWines";
 
 export default function Index() {
   const [activeCategoryId, setActiveCategoryId] = useState<number>(0);
-  const { data: wines, isPending, isError } = useWines();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const { data: wines, isLoading, isError, refetch } = useWines();
+  const [loadingCategory, setLoadingCategory] = useState(false);
+
+  const filteredWines = wines?.filter(
+    (wine: Wine) => (activeCategoryId === 0 || wine.type === activeCategoryId) && wine.wine.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const renderItem = useCallback(
     ({ item, index }: { item: Wine; index: number }) => (
       <View
@@ -25,6 +32,26 @@ export default function Index() {
     [],
   );
 
+  const handleCategoryChange = async (id: number) => {
+    setActiveCategoryId(id);
+    setLoadingCategory(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    } catch (error) {
+      console.error("Failed to filter wines:", error);
+    } finally {
+      setLoadingCategory(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    try {
+      await refetch();
+    } catch (error) {
+      console.error("Failed to refresh wines:", error);
+    }
+  };
+
   return (
     <SafeAreaView className="bg-dark p-4 px-5">
       <View className="my-8 w-[70%]">
@@ -32,20 +59,39 @@ export default function Index() {
           Discover great wines
         </Text>
       </View>
-      <SearchField />
+      <SearchField
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+        placeholder="Search for wines..."
+      />
       <View>
-        <Categories onchange={(id) => setActiveCategoryId(id)} />
+        <Categories onchange={(id) => handleCategoryChange(id)} />
       </View>
       <View className="h-full w-full">
-        <FlashList
-          data={wines}
-          renderItem={renderItem}
-          keyExtractor={(_, index) => `item-${index}`}
-          estimatedItemSize={87}
-          numColumns={2}
-          horizontal={false}
-          className="h-full w-full flex-1"
-        />
+        {loadingCategory || isLoading ? (
+          <View className="flex items-center justify-center">
+            <ActivityIndicator size="large" color="#D27842" />
+          </View>
+        ) : (
+          <FlashList
+            data={filteredWines}
+            renderItem={renderItem}
+            keyExtractor={(_, index) => `item-${index}`}
+            estimatedItemSize={87}
+            numColumns={2}
+            horizontal={false}
+            className="h-full w-full flex-1"
+            contentContainerStyle={{ paddingBottom: 550 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={onRefresh}
+                progressBackgroundColor="#0C0F14"
+                colors={["#D27842"]}
+              />
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
