@@ -1,4 +1,12 @@
-import { ActivityIndicator, RefreshControl, SafeAreaView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Categories from "../../../components/categories";
 import React, { useCallback, useEffect, useState } from "react";
 import SearchField from "@/components/SearchField";
@@ -6,15 +14,20 @@ import WineCard from "@/components/WineCard";
 import { Wine } from "@/types/wine";
 import { FlashList } from "@shopify/flash-list";
 import useWines from "@/hooks/useWines";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 export default function Index() {
   const [activeCategoryId, setActiveCategoryId] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { data: wines, isLoading, isError, refetch } = useWines();
   const [loadingCategory, setLoadingCategory] = useState(false);
+  const router = useRouter();
 
   const filteredWines = wines?.filter(
-    (wine: Wine) => (activeCategoryId === 0 || wine.type === activeCategoryId) && wine.wine.toLowerCase().includes(searchQuery.toLowerCase())
+    (wine: Wine) =>
+      (activeCategoryId === 0 || wine.type === activeCategoryId) &&
+      wine.wine.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const renderItem = useCallback(
@@ -64,6 +77,7 @@ export default function Index() {
         onChangeText={(text) => setSearchQuery(text)}
         placeholder="Search for wines..."
       />
+      {/* Needs to be inside view or categories aren't displayed */}
       <View>
         <Categories onchange={(id) => handleCategoryChange(id)} />
       </View>
@@ -93,6 +107,14 @@ export default function Index() {
           />
         )}
       </View>
+      <TouchableOpacity
+        className="absolute bottom-80 right-5 h-16 w-16 items-center justify-center rounded-full bg-primary"
+        onPress={() => {
+          router.push('/(tabs)/wines/add')
+        }}
+      >
+        <Ionicons name="add" size={30} color="#fff" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

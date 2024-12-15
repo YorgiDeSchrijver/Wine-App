@@ -28,6 +28,7 @@ export default function TabLayout() {
           ),
           tabBarShowLabel: true,
         }}
+        
       />
       <Tabs.Screen
         name="favourites"
