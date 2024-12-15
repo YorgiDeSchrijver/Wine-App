@@ -28,7 +28,7 @@ export default function TabLayout() {
           ),
           tabBarShowLabel: true,
         }}
-        
+
       />
       <Tabs.Screen
         name="favourites"
@@ -39,7 +39,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="profile"
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons size={24} name="person" color={color} />

@@ -11,22 +11,27 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
+import RNPickerSelect from "react-native-picker-select";
+import categories from "@/config/categories";
+import { addWine } from "@/api/wines";
+import { useRouter } from "expo-router";
 
 export default function Add() {
   const [image, setImage] = useState<string | null>(null);
   const [wine, setWine] = useState({
     winery: "",
     wine: "",
-    rating: { average: "", reviews: "" },
+    category: 0,
     coordinates: { latitude: 0, longitude: 0 },
-    image: "",
   });
+  const router = useRouter();
   const [region, setRegion] = useState({
-    latitude: 37.78825, // Default latitude
-    longitude: -122.4324, // Default longitude
+    latitude: 37.78825,
+    longitude: -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
@@ -56,15 +61,28 @@ export default function Add() {
       mediaTypes: ["images"],
       quality: 1,
     });
-
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    try {
+      const result = await addWine({
+        winery: wine.winery,
+        wine: wine.wine,
+        category: wine.category,
+        longitude: region.longitude,
+        latitude: region.latitude,
+      });
+      if(result) {
+        router.back();
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "An error occurred while adding the wine.");
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-dark">
       <ScrollView className="flex-grow p-4">
@@ -74,7 +92,7 @@ export default function Add() {
             Add a Wine
           </Text>
         </View>
-        <View className="flex gap-4 mb-10">
+        <View className="mb-10 flex gap-4">
           <FormInput
             label="Name"
             placeholder="Enter wine name"
@@ -86,6 +104,34 @@ export default function Add() {
             placeholder="Enter brewery"
             value={wine.wine}
             onChangeText={(text) => handleInputChange("wine", text)}
+          />
+          <Text className="font-varela text-xl font-semibold text-white">
+            Category
+          </Text>
+          <RNPickerSelect
+            onValueChange={(value) => handleInputChange("category", value)}
+            items={categories
+              .filter((category) => category.name.toLowerCase() !== "all")
+              .map((category) => ({
+                label: category.name,
+                value: category.id,
+              }))}
+            placeholder={{ label: "Select a category", value: null }}
+            value={wine.category}
+            style={{
+              inputIOS: {
+                backgroundColor: "#141921",
+                color: "white",
+                borderRadius: 20,
+                fontSize: 18,
+              },
+              inputAndroid: {
+                backgroundColor: "#141921",
+                color: "white",
+                borderRadius: 20,
+                fontSize: 18,
+              },
+            }}
           />
           <Text className="font-varela text-xl font-semibold text-white">
             Location
@@ -116,7 +162,10 @@ export default function Add() {
             <Text className="text-lg text-secondary">Upload an image</Text>
           </TouchableOpacity>
           {image && <Image source={{ uri: image }} className="h-20 w-20" />}
-          <TouchableOpacity className="w-full items-center justify-center rounded-3xl bg-primary p-3 mt-4">
+          <TouchableOpacity
+            className="mt-4 w-full items-center justify-center rounded-3xl bg-primary p-3"
+            onPress={handleSubmit}
+          >
             <Text className="text-xl font-bold text-white">Add</Text>
           </TouchableOpacity>
         </View>

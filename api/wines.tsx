@@ -42,6 +42,55 @@ export async function fetchWines(): Promise<Wine[]> {
   } catch (error) {
     console.error("Error fetching wine data:", error);
     throw error;
-
   }
+}
+
+interface AddWineProps {
+  winery: string;
+  wine: string;
+  category: number;
+  longitude: number;
+  latitude: number;
+}
+
+export async function addWine({
+  winery,
+  wine,
+  category,
+  longitude,
+  latitude,
+}: AddWineProps) {
+  const endpoint = wineEndpoints.find((ep) => ep.type === category);
+  if (!endpoint) {
+    throw new Error("Invalid category");
+  }
+  const payload = {
+    winery,
+    wine,
+    rating: {
+      average: "",
+      revviews: "",
+    },
+    location: "",
+    coordinates: {
+      latitude: latitude,
+      longitude: longitude,
+    },
+    image: "",
+  };
+  const headers = {
+    Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlvcmdpLmRlc2NocmlqdmVyQHN0dWRlbnQuYXAuYmUiLCJpYXQiOjE3MzQyOTYwNjN9.ys6wZKKqvu8PWekU0A-YTq0DvBFH2cwTiVtPaGgQKC4",
+  };
+
+  const response = await fetch(endpoint.url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    console.log(payload);
+    console.log(response);
+    throw new Error("Failed to add wine");
+  }
+  return await response.json();
 }
